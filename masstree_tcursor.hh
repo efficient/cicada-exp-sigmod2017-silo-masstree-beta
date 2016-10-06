@@ -206,7 +206,11 @@ template <typename P>
 inline typename tcursor<P>::nodeversion_value_type
 tcursor<P>::previous_full_version_value() const {
     static_assert(int(nodeversion_type::traits_type::top_stable_bits) >= int(leaf<P>::permuter_type::size_bits), "not enough bits to add size to version");
-    return (n_->unlocked_version_value() << leaf<P>::permuter_type::size_bits) + n_->size();
+    // Bug: The original code reads the version after SMOs happens if the node
+    // is split by find_insert(), which returns an incorrect old version.
+    // Using original_v_ simply solves this problem.
+    //return (n_->unlocked_version_value() << leaf<P>::permuter_type::size_bits) + n_->size();
+    return original_v_;
 }
 
 template <typename P>
