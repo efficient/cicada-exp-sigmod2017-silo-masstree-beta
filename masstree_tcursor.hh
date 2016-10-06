@@ -209,8 +209,8 @@ tcursor<P>::previous_full_version_value() const {
     // Bug: The original code reads the version after SMOs happens if the node
     // is split by find_insert(), which returns an incorrect old version.
     // Using original_v_ simply solves this problem.
-    //return (n_->unlocked_version_value() << leaf<P>::permuter_type::size_bits) + n_->size();
-    return original_v_;
+    //return original_v_;
+    return (n_->unlocked_version_value() << leaf<P>::permuter_type::size_bits) + n_->size();
 }
 
 template <typename P>
